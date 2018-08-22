@@ -1,3 +1,5 @@
+import input from './lib/input'
+import state from './lib/state'
 import menuScene from './scenes/menu'
 
 export default (() => {
@@ -19,7 +21,7 @@ export default (() => {
   }
 
   function update(dt) {
-    activeScene.update(dt)
+    activeScene.update(dt, state, input)
   }
 
   function render() {
@@ -31,6 +33,11 @@ export default (() => {
       ctx = canvas.getContext('webgl')
       bctx = buffer.getContext('2d')
       activeScene = menuScene
+      state.set('gameState', 'menu')
+
+      state.addListener('gameState', (value) => {
+        console.log(value)
+      })
     },
 
     start() {
