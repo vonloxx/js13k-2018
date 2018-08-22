@@ -32,7 +32,7 @@ module.exports = {
       },
     }),
     new ClosureCompilerPlugin({
-      test: /\.js(\?.*)?$/i,
+      test: /src\/\.js(\?.*)?$/i,
       compiler: {
         // jar: 'path/to/your/custom/compiler.jar', //optional
         language_in: 'ECMASCRIPT6',
