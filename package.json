@@ -1,0 +1,38 @@
+{
+  "name": "js13k-2018-entry",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --open --config webpack.dev.config.js",
+    "build": "webpack --config webpack.prod.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^0.28.11",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "raw-loader": "^0.5.1",
+    "string-loader": "0.0.1",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.12.2",
+    "webpack-cli": "^2.1.5",
+    "webpack-closure-compiler": "^2.1.6",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.4",
+    "webpack-strip-block": "^0.2.0",
+    "zip-webpack-plugin": "^3.0.0"
+  },
+  "dependencies": {
+    "stats.js": "github:mrdoob/stats.js"
+  }
+}
