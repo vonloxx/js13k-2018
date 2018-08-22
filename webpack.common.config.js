@@ -3,6 +3,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ClosureCompilerPlugin = require('webpack-closure-compiler');
 
 module.exports = {
   entry: [
@@ -24,6 +25,21 @@ module.exports = {
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        conservativeCollapse: true
+      },
     }),
-  ]
+    new ClosureCompilerPlugin({
+      test: /\.js(\?.*)?$/i,
+      compiler: {
+        // jar: 'path/to/your/custom/compiler.jar', //optional
+        language_in: 'ECMASCRIPT6',
+        language_out: 'ECMASCRIPT5',
+        compilation_level: 'ADVANCED'
+      },
+      concurrency: 3,
+    }),
+  ],
 };
