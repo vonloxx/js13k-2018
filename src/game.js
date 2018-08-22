@@ -1,6 +1,10 @@
 import input from './lib/input'
 import state from './lib/state'
-import menuScene from './scenes/menu'
+import webgl from './lib/webgl'
+import scenes from './scenes/'
+
+import STATIC_VERT from './shaders/static.vert'
+import COPY_FRAG from './shaders/copy.frag'
 
 export default (() => {
   let 
@@ -8,7 +12,32 @@ export default (() => {
     bctx, // buffer context 2d
     rafId,
     lastDelta,
-    activeScene
+    activeScene,
+    defaultShader,
+    fbos,
+    bufferTexture
+
+
+  function setupWebGL() {
+    ctx.viewport(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.pixelStorei(ctx.UNPACK_FLIP_Y_WEBGL, true)
+  
+    buffer = ctx.createBuffer()
+    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer)
+    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array([
+      -1.0, -1.0,
+      1.0, -1.0,
+      -1.0,  1.0,
+      -1.0,  1.0,
+      1.0, -1.0,
+      1.0,  1.0
+    ]), ctx.STATIC_DRAW)
+
+    defaultShader = webgl.createShader(STATIC_VERT, COPY_FRAG)
+    fbos = [webgl.createFBO(), webgl.createFBO()]
+  
+    bufferTexture = webgl.createTexture()
+  }
 
   function loop(timestamp) {
     const dt = timestamp - lastDelta
@@ -26,18 +55,27 @@ export default (() => {
 
   function render() {
     activeScene.render(bctx)
+    webgl.setTexture(bufferTexture, bctx.canvas)
+
+    ctx.bindFramebuffer(ctx.FRAMEBUFFER, null)
+    ctx.drawArrays(ctx.TRIANGLES, 0, 6)
+    ctx.flush()
+
   }
 
   return {
     init(canvas, buffer) {
       ctx = canvas.getContext('webgl')
       bctx = buffer.getContext('2d')
-      activeScene = menuScene
+      webgl.init(ctx, ctx.canvas.width, ctx.canvas.height)
+      activeScene = scenes['menu']
       state.set('gameState', 'menu')
 
       state.addListener('gameState', (value) => {
-        console.log(value)
+        activeScene = scenes[value]
       })
+
+      setupWebGL()
     },
 
     start() {
