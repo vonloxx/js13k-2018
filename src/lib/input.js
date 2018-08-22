@@ -37,12 +37,12 @@ Controls.keys = {}
 Controls.mouse = {}
 
 // Handle keys
-addEventListener('keydown', e => Controls.keys[e.which] = true)
-addEventListener('keyup', e => Controls.keys[e.which] = false)
+window.addEventListener('keydown', e => Controls.keys[e.which] = true)
+window.addEventListener('keyup', e => Controls.keys[e.which] = false)
 
 // Handle mouse events
-addEventListener('mousemove', e => { Controls.mouse['x'] = e.clientX; Controls.mouse['y'] = e.clientY })
-addEventListener('mousedown', e => { Controls.mouse['down'] = true; Controls.mouse['up'] = false })
-addEventListener('mouseup', e => { Controls.mouse['up'] = true; Controls.mouse['down'] = false })
+window.addEventListener('mousemove', e => { Controls.mouse['x'] = e.clientX; Controls.mouse['y'] = e.clientY })
+window.addEventListener('mousedown', e => { Controls.mouse['down'] = true; Controls.mouse['up'] = false })
+window.addEventListener('mouseup', e => { Controls.mouse['up'] = true; Controls.mouse['down'] = false })
 
 export default Controls
