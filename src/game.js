@@ -14,6 +14,7 @@ export default (() => {
     lastDelta,
     activeScene,
     defaultShader,
+    buffer,
     fbos,
     bufferTexture
 
@@ -54,6 +55,7 @@ export default (() => {
   }
 
   function render() {
+    bctx.clearRect(0, 0, bctx.canvas.width, bctx.canvas.height)
     activeScene.render(bctx)
     webgl.setTexture(bufferTexture, bctx.canvas)
 
