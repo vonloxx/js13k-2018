@@ -3,8 +3,7 @@ import state from './lib/state'
 import webgl from './lib/webgl'
 import scenes from './scenes/'
 
-import STATIC_VERT from './shaders/static.vert'
-import COPY_FRAG from './shaders/copy.frag'
+import shaders from './shaders/'
 
 export default (() => {
   let 
@@ -12,11 +11,10 @@ export default (() => {
     bctx, // buffer context 2d
     rafId,
     lastDelta,
+    time = 0,
     activeScene,
-    defaultShader,
     buffer,
-    fbos,
-    bufferTexture
+    texture
 
 
   function setupWebGL() {
@@ -33,18 +31,16 @@ export default (() => {
       1.0, -1.0,
       1.0,  1.0
     ]), ctx.STATIC_DRAW)
-
-    defaultShader = webgl.createShader(STATIC_VERT, COPY_FRAG)
-    fbos = [webgl.createFBO(), webgl.createFBO()]
   
-    bufferTexture = webgl.createTexture()
+    texture = webgl.createTexture()
   }
 
   function loop(timestamp) {
     const dt = timestamp - lastDelta
+    time += dt || 0
 
     update(dt)
-    render()
+    render(dt)
 
     rafId = window.requestAnimationFrame(loop)
     lastDelta = timestamp
@@ -54,15 +50,18 @@ export default (() => {
     activeScene.update(dt, state, input)
   }
 
-  function render() {
+  function render(dt) {
+    shaders.pre(ctx, time, dt)
+
     bctx.clearRect(0, 0, bctx.canvas.width, bctx.canvas.height)
     activeScene.render(bctx)
-    webgl.setTexture(bufferTexture, bctx.canvas)
+    webgl.setTexture(texture, bctx.canvas)
+
+    shaders.post(ctx, texture, time, dt)
 
     ctx.bindFramebuffer(ctx.FRAMEBUFFER, null)
     ctx.drawArrays(ctx.TRIANGLES, 0, 6)
     ctx.flush()
-
   }
 
   return {
@@ -78,6 +77,7 @@ export default (() => {
       })
 
       setupWebGL()
+      shaders.init(webgl, ctx, bctx)
     },
 
     start() {
